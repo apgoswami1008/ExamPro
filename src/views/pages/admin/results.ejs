@@ -1,0 +1,329 @@
+<!-- Page Header -->
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="page-title">Exam Results Management</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/admin">Admin</a></li>
+                    <li class="breadcrumb-item active">Results</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-success">
+                <i class="bi bi-file-earmark-spreadsheet me-2"></i>Export CSV
+            </button>
+            <button class="btn btn-danger">
+                <i class="bi bi-file-earmark-pdf me-2"></i>Export PDF
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-icon success">
+                <i class="bi bi-check-circle"></i>
+            </div>
+            <div class="stat-value">2,847</div>
+            <div class="stat-label">Passed</div>
+            <div class="stat-trend up">
+                <span>80.4% pass rate</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-icon danger">
+                <i class="bi bi-x-circle"></i>
+            </div>
+            <div class="stat-value">695</div>
+            <div class="stat-label">Failed</div>
+            <div class="stat-trend down">
+                <span>19.6% fail rate</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-icon warning">
+                <i class="bi bi-star"></i>
+            </div>
+            <div class="stat-value">76.5%</div>
+            <div class="stat-label">Avg Score</div>
+            <div class="stat-trend up">
+                <span>+3.2% improvement</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-icon primary">
+                <i class="bi bi-trophy"></i>
+            </div>
+            <div class="stat-value">98%</div>
+            <div class="stat-label">Highest Score</div>
+            <div class="stat-trend">
+                <span>Alice Johnson</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filter & Search -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control" placeholder="Search results...">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select">
+                    <option value="">All Exams</option>
+                    <option value="1">JavaScript Basics</option>
+                    <option value="2">React Advanced</option>
+                    <option value="3">Node.js Fundamentals</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select">
+                    <option value="">All Status</option>
+                    <option value="pass">Passed</option>
+                    <option value="fail">Failed</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <input type="date" class="form-control" placeholder="From Date">
+            </div>
+            <div class="col-md-2">
+                <input type="date" class="form-control" placeholder="To Date">
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-primary w-100">
+                    <i class="bi bi-funnel"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Results Table -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="px-4">ID</th>
+                        <th>Student</th>
+                        <th>Exam</th>
+                        <th>Score</th>
+                        <th>Percentage</th>
+                        <th>Status</th>
+                        <th>Time Taken</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% 
+                    const results = [
+                        { id: 1001, student: 'John Doe', exam: 'JavaScript Basics', score: 85, total: 100, status: 'pass', time: '45 min', date: '2025-01-10' },
+                        { id: 1002, student: 'Jane Smith', exam: 'React Advanced', score: 92, total: 100, status: 'pass', time: '52 min', date: '2025-01-10' },
+                        { id: 1003, student: 'Mike Johnson', exam: 'Node.js Fundamentals', score: 67, total: 100, status: 'pass', time: '38 min', date: '2025-01-09' },
+                        { id: 1004, student: 'Sarah Williams', exam: 'Python Basics', score: 45, total: 100, status: 'fail', time: '28 min', date: '2025-01-09' },
+                        { id: 1005, student: 'Tom Brown', exam: 'Database Design', score: 78, total: 100, status: 'pass', time: '41 min', date: '2025-01-08' },
+                        { id: 1006, student: 'Alice Johnson', exam: 'Algorithm Design', score: 98, total: 100, status: 'pass', time: '55 min', date: '2025-01-08' },
+                        { id: 1007, student: 'Bob Wilson', exam: 'Web Security', score: 55, total: 100, status: 'fail', time: '32 min', date: '2025-01-07' },
+                        { id: 1008, student: 'Carol Davis', exam: 'Cloud Computing', score: 88, total: 100, status: 'pass', time: '47 min', date: '2025-01-07' }
+                    ];
+                    results.forEach(function(result) { 
+                        const percentage = ((result.score / result.total) * 100).toFixed(1);
+                    %>
+                        <tr>
+                            <td class="px-4"><strong>#<%= result.id %></strong></td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="user-avatar me-2">
+                                        <%= result.student.charAt(0).toUpperCase() %>
+                                    </div>
+                                    <span><%= result.student %></span>
+                                </div>
+                            </td>
+                            <td><%= result.exam %></td>
+                            <td><strong><%= result.score %>/<%= result.total %></strong></td>
+                            <td>
+                                <div class="progress" style="height: 8px; width: 80px;">
+                                    <div class="progress-bar bg-<%= result.status === 'pass' ? 'success' : 'danger' %>" 
+                                         style="width: <%= percentage %>%"></div>
+                                </div>
+                                <small class="text-muted"><%= percentage %>%</small>
+                            </td>
+                            <td>
+                                <span class="badge bg-<%= result.status === 'pass' ? 'success' : 'danger' %>">
+                                    <i class="bi bi-<%= result.status === 'pass' ? 'check' : 'x' %>-circle me-1"></i>
+                                    <%= result.status.toUpperCase() %>
+                                </span>
+                            </td>
+                            <td><small class="text-muted"><%= result.time %></small></td>
+                            <td><small class="text-muted"><%= result.date %></small></td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-sm btn-link text-primary" title="View Details" data-bs-toggle="modal" data-bs-target="#resultDetailModal">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-link text-success" title="Download Certificate">
+                                        <i class="bi bi-download"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-link text-danger" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer bg-white border-0">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="text-muted">Showing 1 to 8 of 3,542 results</div>
+            <nav>
+                <ul class="pagination mb-0">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">Previous</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- Result Detail Modal -->
+<div class="modal fade" id="resultDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Exam Result Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-2">Student Information</h6>
+                        <p class="mb-1"><strong>Name:</strong> John Doe</p>
+                        <p class="mb-1"><strong>Email:</strong> john@example.com</p>
+                        <p class="mb-1"><strong>ID:</strong> #12345</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-2">Exam Information</h6>
+                        <p class="mb-1"><strong>Exam:</strong> JavaScript Basics</p>
+                        <p class="mb-1"><strong>Date:</strong> January 10, 2025</p>
+                        <p class="mb-1"><strong>Time Taken:</strong> 45 minutes</p>
+                    </div>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="text-center p-3 bg-light rounded">
+                            <h3 class="text-primary mb-0">85</h3>
+                            <small class="text-muted">Total Score</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center p-3 bg-light rounded">
+                            <h3 class="text-success mb-0">85%</h3>
+                            <small class="text-muted">Percentage</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center p-3 bg-light rounded">
+                            <h3 class="text-info mb-0">17/20</h3>
+                            <small class="text-muted">Correct</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center p-3 bg-light rounded">
+                            <h3 class="text-danger mb-0">3/20</h3>
+                            <small class="text-muted">Incorrect</small>
+                        </div>
+                    </div>
+                </div>
+
+                <h6 class="mb-3">Question-wise Performance</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Q. No</th>
+                                <th>Status</th>
+                                <th>Marks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for (let i = 1; i <= 10; i++) { 
+                                const isCorrect = Math.random() > 0.2;
+                            %>
+                                <tr>
+                                    <td>Question <%= i %></td>
+                                    <td>
+                                        <span class="badge bg-<%= isCorrect ? 'success' : 'danger' %>">
+                                            <%= isCorrect ? 'Correct' : 'Incorrect' %>
+                                        </span>
+                                    </td>
+                                    <td><%= isCorrect ? '5/5' : '0/5' %></td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Download Report</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+.progress {
+    background-color: #e5e7eb;
+}
+
+.btn-link {
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+}
+
+.btn-link:hover {
+    background: rgba(0,0,0,0.05);
+    border-radius: 0.25rem;
+}
+</style>

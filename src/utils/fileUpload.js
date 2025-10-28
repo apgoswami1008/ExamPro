@@ -1,0 +1,84 @@
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+console.log('FileUpload module loaded from:', __filename);
+
+// Configure multer for file upload
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        // Get the upload directory from environment variable or use default
+        const uploadDir = path.join(process.cwd(), process.env.UPLOAD_DIR || 'src/public/uploads');
+        
+        // Create directory if it doesn't exist
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        
+        cb(null, uploadDir);
+    },
+    filename: function (req, file, cb) {
+        // Generate unique filename with timestamp
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+// File filter function
+const fileFilter = (req, file, cb) => {
+    // Accept images, pdfs, and common document formats
+    const allowedTypes = [
+        'image/jpeg', 
+        'image/png', 
+        'image/gif',
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'text/plain'
+    ];
+
+    if (allowedTypes.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(new Error('Invalid file type. Only images, PDFs, and documents are allowed.'), false);
+    }
+};
+
+// Create multer upload instance
+const upload = multer({
+    storage: storage,
+    fileFilter: fileFilter,
+    limits: {
+        fileSize: parseInt(process.env.MAX_FILE_SIZE) || 5 * 1024 * 1024 // 5MB default
+    }
+});
+
+// Export different upload configurations
+module.exports = {
+    // Single file upload
+    single: (fieldName) => upload.single(fieldName),
+    
+    // Multiple files upload
+    array: (fieldName, maxCount) => upload.array(fieldName, maxCount),
+    
+    // Multiple fields with multiple files
+    fields: (fields) => upload.fields(fields),
+    
+    // Handle errors
+    handleError: (err, req, res, next) => {
+        if (err instanceof multer.MulterError) {
+            // A Multer error occurred during upload
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                return res.status(400).json({
+                    error: 'File size is too large. Maximum size is ' + 
+                          (parseInt(process.env.MAX_FILE_SIZE) / (1024 * 1024)) + 'MB'
+                });
+            }
+            return res.status(400).json({ error: err.message });
+        } else if (err) {
+            // An unknown error occurred
+            return res.status(500).json({ error: err.message });
+        }
+        next();
+    }
+};

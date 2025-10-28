@@ -1,0 +1,369 @@
+<![CDATA[<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0">Add New Question</h1>
+                    <p class="text-muted mb-0">
+                        for <%= exam.title %>
+                    </p>
+                </div>
+                <div>
+                    <a href="/admin/exams/<%= exam.id %>/questions" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Back to Questions
+                    </a>
+                </div>
+            </div>
+
+            <!-- Question Form -->
+            <div class="card">
+                <div class="card-body">
+                    <form action="/admin/exams/<%= exam.id %>/questions" 
+                          method="POST" 
+                          enctype="multipart/form-data" 
+                          class="needs-validation" 
+                          novalidate>
+                        
+                        <!-- Question Type -->
+                        <div class="mb-4">
+                            <label for="type" class="form-label">Question Type</label>
+                            <select class="form-select" 
+                                    id="type" 
+                                    name="type" 
+                                    required 
+                                    onchange="handleTypeChange(this.value)">
+                                <option value="mcq" <%= type === 'mcq' ? 'selected' : '' %>>Multiple Choice</option>
+                                <option value="true-false" <%= type === 'true-false' ? 'selected' : '' %>>True/False</option>
+                                <option value="match" <%= type === 'match' ? 'selected' : '' %>>Match the Following</option>
+                                <option value="descriptive" <%= type === 'descriptive' ? 'selected' : '' %>>Descriptive</option>
+                            </select>
+                        </div>
+
+                        <!-- Question Text -->
+                        <div class="mb-4">
+                            <label for="text" class="form-label">Question Text</label>
+                            <textarea class="form-control" 
+                                     id="text" 
+                                     name="text" 
+                                     rows="3" 
+                                     required></textarea>
+                        </div>
+
+                        <!-- Question Image -->
+                        <div class="mb-4">
+                            <label for="image" class="form-label">Question Image (Optional)</label>
+                            <input type="file" 
+                                   class="form-control" 
+                                   id="image" 
+                                   name="image" 
+                                   accept="image/*">
+                            <div class="form-text">
+                                Supported formats: JPG, PNG, GIF (max 2MB)
+                            </div>
+                        </div>
+
+                        <!-- Multiple Choice Options -->
+                        <div id="mcqOptions" class="mb-4">
+                            <label class="form-label">Options</label>
+                            <div class="options-container">
+                                <div class="option-item mb-2 d-flex align-items-start">
+                                    <div class="form-check me-2">
+                                        <input class="form-check-input" 
+                                               type="radio" 
+                                               name="correctAnswer" 
+                                               value="0" 
+                                               required>
+                                    </div>
+                                    <input type="text" 
+                                           class="form-control" 
+                                           name="options[]" 
+                                           placeholder="Option text" 
+                                           required>
+                                    <button type="button" 
+                                            class="btn btn-outline-danger ms-2"
+                                            onclick="removeOption(this)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="button" 
+                                    class="btn btn-outline-primary mt-2"
+                                    onclick="addOption()">
+                                <i class="bi bi-plus"></i> Add Option
+                            </button>
+                        </div>
+
+                        <!-- True/False Answer -->
+                        <div id="trueFalseOptions" class="mb-4" style="display: none;">
+                            <label class="form-label">Correct Answer</label>
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                       type="radio" 
+                                       name="trueFalseAnswer" 
+                                       value="true" 
+                                       required>
+                                <label class="form-check-label">True</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                       type="radio" 
+                                       name="trueFalseAnswer" 
+                                       value="false">
+                                <label class="form-check-label">False</label>
+                            </div>
+                        </div>
+
+                        <!-- Match the Following -->
+                        <div id="matchOptions" class="mb-4" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Left Column</label>
+                                    <div id="leftColumnOptions" class="match-column">
+                                        <div class="mb-2">
+                                            <input type="text" 
+                                                   class="form-control" 
+                                                   name="leftOptions[]" 
+                                                   placeholder="Left item" 
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <button type="button" 
+                                            class="btn btn-outline-primary mt-2"
+                                            onclick="addMatchOption('left')">
+                                        <i class="bi bi-plus"></i> Add Item
+                                    </button>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Right Column</label>
+                                    <div id="rightColumnOptions" class="match-column">
+                                        <div class="mb-2">
+                                            <input type="text" 
+                                                   class="form-control" 
+                                                   name="rightOptions[]" 
+                                                   placeholder="Right item" 
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <button type="button" 
+                                            class="btn btn-outline-primary mt-2"
+                                            onclick="addMatchOption('right')">
+                                        <i class="bi bi-plus"></i> Add Item
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Descriptive Answer -->
+                        <div id="descriptiveOptions" class="mb-4" style="display: none;">
+                            <label for="modelAnswer" class="form-label">Model Answer (Optional)</label>
+                            <textarea class="form-control" 
+                                     id="modelAnswer" 
+                                     name="modelAnswer" 
+                                     rows="3"></textarea>
+                            <div class="form-text">
+                                Provide a model answer to help evaluators grade responses consistently.
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Additional Settings -->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="marks" class="form-label">Marks</label>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="marks" 
+                                           name="marks" 
+                                           min="0" 
+                                           step="0.5" 
+                                           required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="negativeMarks" class="form-label">
+                                        Negative Marks
+                                        <i class="bi bi-question-circle" 
+                                           data-bs-toggle="tooltip" 
+                                           title="Marks deducted for wrong answers"></i>
+                                    </label>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="negativeMarks" 
+                                           name="negativeMarks" 
+                                           min="0" 
+                                           step="0.5" 
+                                           value="0">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="difficulty" class="form-label">Difficulty Level</label>
+                                    <select class="form-select" 
+                                            id="difficulty" 
+                                            name="difficulty" 
+                                            required>
+                                        <option value="easy">Easy</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="hard">Hard</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Explanation -->
+                        <div class="mb-4">
+                            <label for="explanation" class="form-label">
+                                Explanation (Optional)
+                                <i class="bi bi-question-circle" 
+                                   data-bs-toggle="tooltip" 
+                                   title="Explain why the answer is correct"></i>
+                            </label>
+                            <textarea class="form-control" 
+                                     id="explanation" 
+                                     name="explanation" 
+                                     rows="3"></textarea>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" 
+                                    class="btn btn-outline-secondary"
+                                    onclick="window.location.href='/admin/exams/<%= exam.id %>/questions'">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                Save Question
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Form validation
+(function () {
+    'use strict';
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+})();
+
+// Initialize tooltips
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+});
+
+// Handle question type change
+function handleTypeChange(type) {
+    // Hide all option containers
+    document.getElementById('mcqOptions').style.display = 'none';
+    document.getElementById('trueFalseOptions').style.display = 'none';
+    document.getElementById('matchOptions').style.display = 'none';
+    document.getElementById('descriptiveOptions').style.display = 'none';
+
+    // Show the selected type's options
+    switch(type) {
+        case 'mcq':
+            document.getElementById('mcqOptions').style.display = 'block';
+            break;
+        case 'true-false':
+            document.getElementById('trueFalseOptions').style.display = 'block';
+            break;
+        case 'match':
+            document.getElementById('matchOptions').style.display = 'block';
+            break;
+        case 'descriptive':
+            document.getElementById('descriptiveOptions').style.display = 'block';
+            break;
+    }
+}
+
+// Handle MCQ options
+function addOption() {
+    const container = document.querySelector('.options-container');
+    const optionCount = container.children.length;
+    const optionHtml = `
+        <div class="option-item mb-2 d-flex align-items-start">
+            <div class="form-check me-2">
+                <input class="form-check-input" 
+                       type="radio" 
+                       name="correctAnswer" 
+                       value="${optionCount}" 
+                       required>
+            </div>
+            <input type="text" 
+                   class="form-control" 
+                   name="options[]" 
+                   placeholder="Option text" 
+                   required>
+            <button type="button" 
+                    class="btn btn-outline-danger ms-2"
+                    onclick="removeOption(this)">
+                <i class="bi bi-trash"></i>
+            </button>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', optionHtml);
+}
+
+function removeOption(button) {
+    const optionItem = button.closest('.option-item');
+    if (document.querySelectorAll('.option-item').length > 2) {
+        optionItem.remove();
+        updateOptionValues();
+    }
+}
+
+function updateOptionValues() {
+    const options = document.querySelectorAll('.option-item input[type="radio"]');
+    options.forEach((option, index) => {
+        option.value = index;
+    });
+}
+
+// Handle matching options
+function addMatchOption(column) {
+    const container = document.getElementById(`${column}ColumnOptions`);
+    const itemHtml = `
+        <div class="mb-2 d-flex">
+            <input type="text" 
+                   class="form-control" 
+                   name="${column}Options[]" 
+                   placeholder="${column === 'left' ? 'Left' : 'Right'} item" 
+                   required>
+            <button type="button" 
+                    class="btn btn-outline-danger ms-2"
+                    onclick="removeMatchOption(this)">
+                <i class="bi bi-trash"></i>
+            </button>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', itemHtml);
+}
+
+function removeMatchOption(button) {
+    const itemDiv = button.closest('.mb-2');
+    const container = itemDiv.parentElement;
+    if (container.children.length > 1) {
+        itemDiv.remove();
+    }
+}
+
+// Initialize with default type
+handleTypeChange(document.getElementById('type').value);
+</script>]]>

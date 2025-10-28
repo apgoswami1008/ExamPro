@@ -1,0 +1,63 @@
+{
+  "name": "online-examination",
+  "version": "1.0.0",
+  "description": "Online Examination and Quiz Management System with LMS integration",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon --watch src -e js,json,ejs src/app.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "seed": "node src/config/seeders/index.js",
+    "test": "jest"
+  },
+  "keywords": [
+    "online-exam",
+    "quiz",
+    "lms",
+    "education",
+    "assessment"
+  ],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "@paypal/paypal-server-sdk": "^1.0.1",
+    "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-ejs-layouts": "^2.5.1",
+    "express-rate-limit": "^6.7.0",
+    "express-session": "^1.18.2",
+    "express-validator": "^7.0.1",
+    "helmet": "^7.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "moment": "^2.29.4",
+    "mongoose": "^8.19.0",
+    "morgan": "^1.10.0",
+    "multer": "^2.0.0",
+    "nodemailer": "^6.9.1",
+    "pdf-lib": "^1.17.1",
+    "razorpay": "^2.8.6",
+    "stripe": "^12.3.0",
+    "uuid": "^9.0.0",
+    "web-push": "^3.6.1",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.39.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^29.5.0",
+    "nodemon": "^3.1.0",
+    "prettier": "^2.8.8",
+    "supertest": "^6.3.3"
+  }
+}

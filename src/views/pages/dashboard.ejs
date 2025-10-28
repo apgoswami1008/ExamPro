@@ -1,0 +1,319 @@
+<div class="container-fluid mt-5 pt-5">
+    <div class="row">
+        <!-- Left Sidebar - Profile Card -->
+        <div class="col-lg-3 mb-4">
+            <!-- Profile Card -->
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="position-relative mb-4 mx-auto" style="width: 120px; height: 120px;">
+                        <% if (user.profileImage) { %>
+                            <img src="<%= user.profileImage %>" 
+                                 class="rounded-circle w-100 h-100 object-fit-cover"
+                                 alt="Profile Image">
+                        <% } else { %>
+                            <div class="rounded-circle bg-primary w-100 h-100 d-flex align-items-center justify-content-center">
+                                <span class="display-4 text-white"><%= user.name.charAt(0).toUpperCase() %></span>
+                            </div>
+                        <% } %>
+                        <a href="/profile" class="position-absolute bottom-0 end-0 btn btn-sm btn-primary rounded-circle">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                    </div>
+                    <h5 class="mb-1"><%= user.name %></h5>
+                    <p class="text-muted mb-3"><%= user.email %></p>
+                    <div class="d-grid">
+                        <a href="/profile" class="btn btn-outline-primary">
+                            <i class="bi bi-person-gear me-2"></i>Edit Profile
+                        </a>
+                    </div>
+                </div>
+                <div class="card-footer bg-light">
+                    <div class="row text-center">
+                        <div class="col">
+                            <h6 class="mb-1"><%= stats.totalAttempts || 0 %></h6>
+                            <small class="text-muted">Exams</small>
+                        </div>
+                        <div class="col border-start">
+                            <h6 class="mb-1"><%= stats.totalPassed || 0 %></h6>
+                            <small class="text-muted">Passed</small>
+                        </div>
+                        <div class="col border-start">
+                            <h6 class="mb-1"><%= stats.highestScore || 0 %></h6>
+                            <small class="text-muted">Best</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="col-lg-6 mb-4">
+            <!-- Welcome Message -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h4 class="mb-1">Welcome back, <%= user.name.split(' ')[0] %>! 👋</h4>
+                            <p class="text-muted mb-0">Here's what's happening with your exams today.</p>
+                        </div>
+                        <div class="text-end">
+                            <div class="text-muted">
+                                <%= new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Available Exams -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-transparent">
+                    <div class="d-flex align-items-center">
+                        <h5 class="mb-0">Available Exams</h5>
+                        <a href="/exams" class="btn btn-sm btn-outline-primary ms-auto">View All</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <% if (upcomingExams && upcomingExams.length > 0) { %>
+                        <div class="list-group list-group-flush">
+                            <% upcomingExams.forEach(function(exam) { %>
+                                <div class="list-group-item">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1"><%= exam.title %></h6>
+                                            <p class="mb-0 text-muted">
+                                                <small>
+                                                    <i class="bi bi-clock me-1"></i><%= exam.duration %> minutes
+                                                    <span class="mx-2">•</span>
+                                                    <i class="bi bi-star me-1"></i><%= exam.totalMarks %> marks
+                                                </small>
+                                            </p>
+                                        </div>
+                                        <a href="/exams/<%= exam._id %>" class="btn btn-primary btn-sm">
+                                            Start Exam
+                                        </a>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+                    <% } else { %>
+                        <div class="text-center py-4">
+                            <i class="bi bi-calendar2-x text-muted" style="font-size: 2rem;"></i>
+                            <p class="mt-2 mb-0 text-muted">No exams available right now</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Recent Exam History -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">Recent Exam History</h5>
+                </div>
+                <div class="card-body">
+                    <% if (recentAttempts && recentAttempts.length > 0) { %>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Exam</th>
+                                        <th>Score</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% recentAttempts.forEach(function(attempt) { %>
+                                        <tr>
+                                            <td><%= attempt.exam.title %></td>
+                                            <td>
+                                                <%= attempt.score %>/<%= attempt.exam.totalMarks %>
+                                                <small class="text-muted">(<%= attempt.scorePercentage %>%)</small>
+                                            </td>
+                                            <td>
+                                                <small class="text-muted">
+                                                    <%= new Date(attempt.createdAt).toLocaleDateString() %>
+                                                </small>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-<%= attempt.status === 'pass' ? 'success' : 'danger' %>">
+                                                    <%= attempt.status.toUpperCase() %>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% } else { %>
+                        <div class="text-center py-4">
+                            <i class="bi bi-clock-history text-muted" style="font-size: 2rem;"></i>
+                            <p class="mt-2 mb-0 text-muted">No exam history yet</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="col-lg-3">
+            <!-- Performance Chart -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">Performance Trend</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="performanceChart" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-transparent">
+                    <div class="d-flex align-items-center">
+                        <h5 class="mb-0">Notifications</h5>
+                        <% if (notifications && notifications.length > 0) { %>
+                            <span class="badge bg-primary rounded-pill ms-2"><%= notifications.length %></span>
+                        <% } %>
+                        <a href="/notifications" class="btn btn-sm btn-link ms-auto">View All</a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <% if (notifications && notifications.length > 0) { %>
+                        <div class="list-group list-group-flush">
+                            <% notifications.forEach(function(notification) { %>
+                                <a href="<%= notification.link %>" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1"><%= notification.title %></h6>
+                                        <small class="text-muted"><%= notification.timeAgo %></small>
+                                    </div>
+                                    <p class="mb-1 text-muted"><%= notification.message %></p>
+                                </a>
+                            <% }); %>
+                        </div>
+                    <% } else { %>
+                        <div class="text-center py-4">
+                            <i class="bi bi-bell text-muted" style="font-size: 2rem;"></i>
+                            <p class="mt-2 mb-0 text-muted">No new notifications</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Enrolled Courses -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-transparent">
+                    <div class="d-flex align-items-center">
+                        <h5 class="mb-0">My Courses</h5>
+                        <a href="/courses" class="btn btn-sm btn-link ms-auto">View All</a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <% if (courseEnrollments && courseEnrollments.length > 0) { %>
+                        <div class="list-group list-group-flush">
+                            <% courseEnrollments.forEach(function(course) { %>
+                                <a href="/courses/<%= course._id %>" class="list-group-item list-group-item-action">
+                                    <h6 class="mb-1"><%= course.title %></h6>
+                                    <p class="mb-0 text-muted"><small><%= course.description %></small></p>
+                                </a>
+                            <% }); %>
+                        </div>
+                    <% } else { %>
+                        <div class="text-center py-4">
+                            <i class="bi bi-journal-text text-muted" style="font-size: 2rem;"></i>
+                            <p class="mt-2 mb-0 text-muted">No courses enrolled</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+.card {
+    border: none;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.object-fit-cover {
+    object-fit: cover;
+}
+
+.avatar-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: var(--bs-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+}
+
+.badge {
+    font-weight: 500;
+}
+
+.list-group-item {
+    border-left: none;
+    border-right: none;
+}
+
+.list-group-item:first-child {
+    border-top: none;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+</style>
+
+<!-- Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: <%- JSON.stringify(chartData.labels) %>,
+            datasets: [{
+                label: 'Average Score',
+                data: <%- JSON.stringify(chartData.scores) %>,
+                borderColor: '#0d6efd',
+                backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>

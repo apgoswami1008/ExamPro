@@ -1,0 +1,334 @@
+<![CDATA[<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="h3 mb-0">Edit Exam</h1>
+                <div class="btn-group">
+                    <a href="/admin/exams/<%= exam.id %>/questions" class="btn btn-outline-primary">
+                        <i class="bi bi-list-check"></i> Manage Questions
+                    </a>
+                    <a href="/admin/exams/<%= exam.id %>/preview" class="btn btn-outline-secondary">
+                        <i class="bi bi-eye"></i> Preview
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Status Alert -->
+            <% if (!exam.isPublished) { %>
+                <div class="alert alert-warning mb-4">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    This exam is currently in draft mode and is not visible to students.
+                    <a href="#" onclick="publishExam('<%= exam.id %>')" class="alert-link">Publish now</a>
+                </div>
+            <% } %>
+
+            <!-- Main Form -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form action="/admin/exams/<%= exam.id %>" method="POST" class="needs-validation" novalidate>
+                        <input type="hidden" name="_method" value="PUT">
+                        
+                        <!-- Basic Information -->
+                        <div class="mb-4">
+                            <h5 class="card-title mb-3">Basic Information</h5>
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Exam Title</label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="title" 
+                                       name="title"
+                                       value="<%= exam.title %>"
+                                       required>
+                                <div class="invalid-feedback">
+                                    Please provide an exam title.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" 
+                                          id="description" 
+                                          name="description" 
+                                          rows="3"><%= exam.description %></textarea>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="duration" class="form-label">Duration (minutes)</label>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="duration" 
+                                           name="duration"
+                                           value="<%= exam.duration %>"
+                                           min="1"
+                                           required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="attempts" class="form-label">Allowed Attempts</label>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="attempts" 
+                                           name="attempts"
+                                           value="<%= exam.attempts %>"
+                                           min="1">
+                                    <div class="form-text">Enter -1 for unlimited attempts</div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="totalMarks" class="form-label">Total Marks</label>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="totalMarks" 
+                                           name="totalMarks"
+                                           value="<%= exam.totalMarks %>"
+                                           required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="passingMarks" class="form-label">Passing Marks</label>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="passingMarks" 
+                                           name="passingMarks"
+                                           value="<%= exam.passingMarks %>"
+                                           required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scheduling -->
+                        <div class="mb-4">
+                            <h5 class="card-title mb-3">Scheduling</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="startTime" class="form-label">Start Date & Time</label>
+                                    <input type="datetime-local" 
+                                           class="form-control" 
+                                           id="startTime" 
+                                           name="startTime"
+                                           value="<%= exam.startTime ? new Date(exam.startTime).toISOString().slice(0, 16) : '' %>">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="endTime" class="form-label">End Date & Time</label>
+                                    <input type="datetime-local" 
+                                           class="form-control" 
+                                           id="endTime" 
+                                           name="endTime"
+                                           value="<%= exam.endTime ? new Date(exam.endTime).toISOString().slice(0, 16) : '' %>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Settings -->
+                        <div class="mb-4">
+                            <h5 class="card-title mb-3">Settings</h5>
+                            <div class="mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" 
+                                           type="checkbox" 
+                                           id="shuffleQuestions" 
+                                           name="shuffleQuestions"
+                                           <%= exam.shuffleQuestions ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="shuffleQuestions">
+                                        Shuffle Questions
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" 
+                                           type="checkbox" 
+                                           id="showResult" 
+                                           name="showResult"
+                                           <%= exam.showResult ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="showResult">
+                                        Show Results Immediately
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Instructions -->
+                        <div class="mb-4">
+                            <h5 class="card-title mb-3">Instructions</h5>
+                            <div class="mb-3">
+                                <label for="instructions" class="form-label">Exam Instructions</label>
+                                <textarea class="form-control" 
+                                          id="instructions" 
+                                          name="instructions" 
+                                          rows="5"><%= exam.instructions %></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Pricing -->
+                        <div class="mb-4">
+                            <h5 class="card-title mb-3">Pricing</h5>
+                            <div class="mb-3">
+                                <label for="price" class="form-label">Price</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="price" 
+                                           name="price"
+                                           value="<%= exam.price %>"
+                                           step="0.01"
+                                           min="0">
+                                </div>
+                                <div class="form-text">Set to 0 for free exam</div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <% if (!exam.isPublished) { %>
+                                <button type="submit" 
+                                        class="btn btn-primary">
+                                    Update Exam
+                                </button>
+                            <% } else { %>
+                                <button type="submit" 
+                                        class="btn btn-warning"
+                                        onclick="return confirm('Warning: Making changes to a published exam may affect enrolled students. Continue?')">
+                                    Update Published Exam
+                                </button>
+                            <% } %>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Status Card -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Exam Status</h5>
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="badge bg-<%= exam.isPublished ? 'success' : 'warning' %> me-2">
+                            <%= exam.isPublished ? 'Published' : 'Draft' %>
+                        </span>
+                        <span class="text-muted">
+                            Last updated: <%= new Date(exam.updatedAt).toLocaleDateString() %>
+                        </span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Questions:</strong> <%= exam.questions.length %>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Total Attempts:</strong> <%= exam.examAttempts.length %>
+                    </div>
+                    <% if (exam.isPublished) { %>
+                        <button onclick="unpublishExam('<%= exam.id %>')"
+                                class="btn btn-outline-warning btn-sm">
+                            Unpublish Exam
+                        </button>
+                    <% } else { %>
+                        <button onclick="publishExam('<%= exam.id %>')"
+                                class="btn btn-outline-success btn-sm">
+                            Publish Exam
+                        </button>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Actions</h5>
+                    <div class="list-group list-group-flush">
+                        <a href="/admin/exams/<%= exam.id %>/questions" 
+                           class="list-group-item list-group-item-action">
+                            <i class="bi bi-list-check me-2"></i>
+                            Manage Questions
+                        </a>
+                        <a href="/admin/exams/<%= exam.id %>/preview" 
+                           class="list-group-item list-group-item-action">
+                            <i class="bi bi-eye me-2"></i>
+                            Preview Exam
+                        </a>
+                        <a href="/admin/exams/<%= exam.id %>/results" 
+                           class="list-group-item list-group-item-action">
+                            <i class="bi bi-bar-chart me-2"></i>
+                            View Results
+                        </a>
+                        <button onclick="duplicateExam('<%= exam.id %>')"
+                                class="list-group-item list-group-item-action">
+                            <i class="bi bi-files me-2"></i>
+                            Duplicate Exam
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Publish Confirmation Modal -->
+<div class="modal fade" id="publishModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Publish Exam</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to publish this exam? Once published:</p>
+                <ul>
+                    <li>The exam will be visible to students</li>
+                    <li>Students can enroll and attempt the exam</li>
+                    <li>You can still make changes, but it may affect enrolled students</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="publishForm" method="POST" style="display: inline;">
+                    <input type="hidden" name="_method" value="PATCH">
+                    <button type="submit" class="btn btn-success">Publish</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function publishExam(examId) {
+    const modal = new bootstrap.Modal(document.getElementById('publishModal'));
+    const form = document.getElementById('publishForm');
+    form.action = `/admin/exams/${examId}/publish`;
+    modal.show();
+}
+
+function unpublishExam(examId) {
+    if (confirm('Are you sure you want to unpublish this exam? Enrolled students will no longer be able to access it.')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/admin/exams/${examId}/unpublish`;
+        
+        const methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        methodInput.value = 'PATCH';
+        
+        form.appendChild(methodInput);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+function duplicateExam(examId) {
+    if (confirm('Do you want to create a copy of this exam?')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/admin/exams/${examId}/duplicate`;
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>]]>

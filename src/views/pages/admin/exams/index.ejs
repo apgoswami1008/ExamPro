@@ -1,0 +1,157 @@
+<![CDATA[<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Manage Exams</h1>
+        <a href="/admin/exams/create" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Create New Exam
+        </a>
+    </div>
+
+    <!-- Filters -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form class="row g-3" method="GET">
+                <div class="col-md-3">
+                    <label for="search" class="form-label">Search</label>
+                    <input type="text" class="form-control" id="search" name="search" 
+                           value="<%= typeof query !== 'undefined' ? query.search : '' %>"
+                           placeholder="Search by title or description">
+                </div>
+                <div class="col-md-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">All</option>
+                        <option value="draft" <%= typeof query !== 'undefined' && query.status === 'draft' ? 'selected' : '' %>>Draft</option>
+                        <option value="published" <%= typeof query !== 'undefined' && query.status === 'published' ? 'selected' : '' %>>Published</option>
+                        <option value="archived" <%= typeof query !== 'undefined' && query.status === 'archived' ? 'selected' : '' %>>Archived</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="date" class="form-label">Date Range</label>
+                    <input type="date" class="form-control" id="date" name="date"
+                           value="<%= typeof query !== 'undefined' ? query.date : '' %>">
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">Filter</button>
+                    <a href="/admin/exams" class="btn btn-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Exams List -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Questions</th>
+                            <th>Duration</th>
+                            <th>Total Marks</th>
+                            <th>Start Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (typeof exams !== 'undefined' && exams.length > 0) { %>
+                            <% exams.forEach(function(exam) { %>
+                                <tr>
+                                    <td>
+                                        <a href="/admin/exams/<%= exam.id %>" class="text-decoration-none">
+                                            <%= exam.title %>
+                                        </a>
+                                    </td>
+                                    <td><%= exam.questions.length %></td>
+                                    <td><%= exam.duration %> mins</td>
+                                    <td><%= exam.totalMarks %></td>
+                                    <td><%= new Date(exam.startTime).toLocaleDateString() %></td>
+                                    <td>
+                                        <span class="badge bg-<%= exam.isPublished ? 'success' : 'warning' %>">
+                                            <%= exam.isPublished ? 'Published' : 'Draft' %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="/admin/exams/<%= exam.id %>/edit" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="/admin/exams/<%= exam.id %>/questions" class="btn btn-sm btn-outline-info">
+                                                <i class="bi bi-list-check"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-outline-danger"
+                                                    onclick="deleteExam('<%= exam.id %>')"
+                                                    <%= exam.isPublished ? 'disabled' : '' %>>
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="7" class="text-center py-4">
+                                    <div class="text-muted">
+                                        <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                                        No exams found. Create your first exam to get started.
+                                    </div>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <% if (typeof pagination !== 'undefined') { %>
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item <%= pagination.currentPage === 1 ? 'disabled' : '' %>">
+                            <a class="page-link" href="?page=<%= pagination.currentPage - 1 %>" tabindex="-1">Previous</a>
+                        </li>
+                        <% for(let i = 1; i <= pagination.totalPages; i++) { %>
+                            <li class="page-item <%= pagination.currentPage === i ? 'active' : '' %>">
+                                <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                            </li>
+                        <% } %>
+                        <li class="page-item <%= pagination.currentPage === pagination.totalPages ? 'disabled' : '' %>">
+                            <a class="page-link" href="?page=<%= pagination.currentPage + 1 %>">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Exam</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this exam? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function deleteExam(examId) {
+    const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    const form = document.getElementById('deleteForm');
+    form.action = `/admin/exams/${examId}`;
+    modal.show();
+}
+</script>]]>

@@ -1,0 +1,227 @@
+<![CDATA[<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-0">Create New Exam</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Main Form -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form action="/admin/exams" method="POST" class="needs-validation" novalidate>
+                        <!-- Basic Information -->
+                        <div class="mb-4">
+                            <h5 class="card-title mb-3">Basic Information</h5>
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Exam Title</label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="title" 
+                                       name="title"
+                                       value="<%= typeof input !== 'undefined' ? input.title : '' %>"
+                                       required>
+                                <div class="invalid-feedback">
+                                    Please provide an exam title.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" 
+                                          id="description" 
+                                          name="description" 
+                                          rows="3"><%= typeof input !== 'undefined' ? input.description : '' %></textarea>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="duration" class="form-label">Duration (minutes)</label>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="duration" 
+                                           name="duration"
+                                           value="<%= typeof input !== 'undefined' ? input.duration : '60' %>"
+                                           min="1"
+                                           required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="attempts" class="form-label">Allowed Attempts</label>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="attempts" 
+                                           name="attempts"
+                                           value="<%= typeof input !== 'undefined' ? input.attempts : '1' %>"
+                                           min="1">
+                                    <div class="form-text">Enter -1 for unlimited attempts</div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="totalMarks" class="form-label">Total Marks</label>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="totalMarks" 
+                                           name="totalMarks"
+                                           value="<%= typeof input !== 'undefined' ? input.totalMarks : '100' %>"
+                                           required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="passingMarks" class="form-label">Passing Marks</label>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="passingMarks" 
+                                           name="passingMarks"
+                                           value="<%= typeof input !== 'undefined' ? input.passingMarks : '40' %>"
+                                           required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scheduling -->
+                        <div class="mb-4">
+                            <h5 class="card-title mb-3">Scheduling</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="startTime" class="form-label">Start Date & Time</label>
+                                    <input type="datetime-local" 
+                                           class="form-control" 
+                                           id="startTime" 
+                                           name="startTime"
+                                           value="<%= typeof input !== 'undefined' ? input.startTime : '' %>">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="endTime" class="form-label">End Date & Time</label>
+                                    <input type="datetime-local" 
+                                           class="form-control" 
+                                           id="endTime" 
+                                           name="endTime"
+                                           value="<%= typeof input !== 'undefined' ? input.endTime : '' %>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Settings -->
+                        <div class="mb-4">
+                            <h5 class="card-title mb-3">Settings</h5>
+                            <div class="mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" 
+                                           type="checkbox" 
+                                           id="shuffleQuestions" 
+                                           name="shuffleQuestions"
+                                           <%= typeof input !== 'undefined' && input.shuffleQuestions ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="shuffleQuestions">
+                                        Shuffle Questions
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" 
+                                           type="checkbox" 
+                                           id="showResult" 
+                                           name="showResult"
+                                           <%= typeof input !== 'undefined' && input.showResult ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="showResult">
+                                        Show Results Immediately
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Instructions -->
+                        <div class="mb-4">
+                            <h5 class="card-title mb-3">Instructions</h5>
+                            <div class="mb-3">
+                                <label for="instructions" class="form-label">Exam Instructions</label>
+                                <textarea class="form-control" 
+                                          id="instructions" 
+                                          name="instructions" 
+                                          rows="5"><%= typeof input !== 'undefined' ? input.instructions : '' %></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Pricing -->
+                        <div class="mb-4">
+                            <h5 class="card-title mb-3">Pricing</h5>
+                            <div class="mb-3">
+                                <label for="price" class="form-label">Price</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="price" 
+                                           name="price"
+                                           value="<%= typeof input !== 'undefined' ? input.price : '0' %>"
+                                           step="0.01"
+                                           min="0">
+                                </div>
+                                <div class="form-text">Set to 0 for free exam</div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="submit" 
+                                    name="action" 
+                                    value="draft" 
+                                    class="btn btn-secondary">
+                                Save as Draft
+                            </button>
+                            <button type="submit" 
+                                    name="action" 
+                                    value="publish" 
+                                    class="btn btn-primary">
+                                Save and Continue
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Help Card -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Tips</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="bi bi-info-circle text-primary me-2"></i>
+                            Fill in all required fields marked with *
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-clock text-primary me-2"></i>
+                            Set duration in minutes (e.g., 60 for 1 hour)
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-calendar text-primary me-2"></i>
+                            Schedule exam time in your local timezone
+                        </li>
+                        <li>
+                            <i class="bi bi-gear text-primary me-2"></i>
+                            Configure exam settings before adding questions
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Preview Card -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Next Steps</h5>
+                    <p class="card-text">After creating the exam:</p>
+                    <ol class="ps-3">
+                        <li>Add questions to your exam</li>
+                        <li>Preview the exam</li>
+                        <li>Publish when ready</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>]]>

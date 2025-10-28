@@ -1,0 +1,206 @@
+<%- include('../layouts/main', { title: 'Settings' }) %>
+
+<div class="container mt-5 pt-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <!-- Notification Preferences -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Notification Preferences</h5>
+                </div>
+                <div class="card-body">
+                    <form action="/settings" method="POST">
+                        <div class="mb-3">
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" id="emailNotifications" 
+                                       name="notificationPreferences[]" value="email"
+                                       <%= user.notificationPreferences?.email ? 'checked' : '' %>>
+                                <label class="form-check-label" for="emailNotifications">
+                                    Email Notifications
+                                </label>
+                                <div class="form-text">Receive notifications about your exams, courses, and account via email</div>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="browserNotifications" 
+                                       name="notificationPreferences[]" value="browser"
+                                       <%= user.notificationPreferences?.browser ? 'checked' : '' %>>
+                                <label class="form-check-label" for="browserNotifications">
+                                    Browser Notifications
+                                </label>
+                                <div class="form-text">Show notifications in your browser when you're using the platform</div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            Save Preferences
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Security Settings -->
+            <div class="card shadow-sm mb-4" id="security">
+                <div class="card-header">
+                    <h5 class="mb-0">Security Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h6>Two-Factor Authentication</h6>
+                        <p class="text-muted mb-3">Add an extra layer of security to your account</p>
+                        <button class="btn btn-outline-primary" onclick="setupTwoFactor()">
+                            Setup 2FA
+                        </button>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6>Active Sessions</h6>
+                        <p class="text-muted mb-3">Manage devices where you're currently logged in</p>
+                        <div class="list-group">
+                            <% if (typeof activeSessions !== 'undefined' && activeSessions.length > 0) { %>
+                                <% activeSessions.forEach(function(session) { %>
+                                    <div class="list-group-item">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1"><%= session.device %></h6>
+                                                <small class="text-muted">
+                                                    Last active: <%= session.lastActive %>
+                                                </small>
+                                            </div>
+                                            <button class="btn btn-sm btn-outline-danger" 
+                                                    onclick="revokeSession('<%= session.id %>')">
+                                                Revoke
+                                            </button>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            <% } else { %>
+                                <div class="list-group-item text-muted">
+                                    No other active sessions
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h6>Login History</h6>
+                        <p class="text-muted mb-3">Recent login attempts to your account</p>
+                        <div class="list-group">
+                            <% if (typeof loginHistory !== 'undefined' && loginHistory.length > 0) { %>
+                                <% loginHistory.forEach(function(login) { %>
+                                    <div class="list-group-item">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1"><%= login.location %></h6>
+                                                <small class="text-muted">
+                                                    <%= login.timestamp %> • <%= login.device %>
+                                                </small>
+                                            </div>
+                                            <span class="badge bg-<%= login.status === 'success' ? 'success' : 'danger' %>">
+                                                <%= login.status %>
+                                            </span>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            <% } else { %>
+                                <div class="list-group-item text-muted">
+                                    No login history available
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Privacy Settings -->
+            <div class="card shadow-sm" id="privacy">
+                <div class="card-header">
+                    <h5 class="mb-0">Privacy Settings</h5>
+                </div>
+                <div class="card-body">
+                    <form action="/settings/privacy" method="POST">
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="profileVisibility" 
+                                       name="privacySettings[profileVisibility]" 
+                                       <%= user.privacySettings?.profileVisibility ? 'checked' : '' %>>
+                                <label class="form-check-label" for="profileVisibility">
+                                    Public Profile
+                                </label>
+                                <div class="form-text">Allow other users to view your profile</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="showOnlineStatus" 
+                                       name="privacySettings[showOnlineStatus]"
+                                       <%= user.privacySettings?.showOnlineStatus ? 'checked' : '' %>>
+                                <label class="form-check-label" for="showOnlineStatus">
+                                    Online Status
+                                </label>
+                                <div class="form-text">Show when you're active on the platform</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="shareActivityHistory" 
+                                       name="privacySettings[shareActivityHistory]"
+                                       <%= user.privacySettings?.shareActivityHistory ? 'checked' : '' %>>
+                                <label class="form-check-label" for="shareActivityHistory">
+                                    Activity History
+                                </label>
+                                <div class="form-text">Share your learning progress with other users</div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            Update Privacy Settings
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function setupTwoFactor() {
+    // Implement 2FA setup logic
+    alert('Two-factor authentication setup coming soon!');
+}
+
+function revokeSession(sessionId) {
+    if (confirm('Are you sure you want to revoke this session?')) {
+        fetch('/settings/revoke-session/' + sessionId, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Failed to revoke session. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        });
+    }
+}
+
+// Handle browser notification permission
+document.getElementById('browserNotifications')?.addEventListener('change', function(e) {
+    if (e.target.checked) {
+        Notification.requestPermission().then(function(permission) {
+            if (permission !== 'granted') {
+                e.target.checked = false;
+                alert('Browser notifications are blocked. Please update your browser settings to enable notifications.');
+            }
+        });
+    }
+});
+</script>

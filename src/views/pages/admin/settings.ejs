@@ -1,0 +1,403 @@
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Admin Settings</h1>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin">Admin</a></li>
+            <li class="breadcrumb-item active">Settings</li>
+        </ol>
+    </nav>
+</div>
+
+<div class="row g-4">
+    <!-- Settings Navigation -->
+    <div class="col-lg-3">
+        <div class="card border-0 shadow-sm">
+            <div class="list-group list-group-flush">
+                <a href="#general" class="list-group-item list-group-item-action active" data-bs-toggle="list">
+                    <i class="bi bi-gear me-2"></i>General Settings
+                </a>
+                <a href="#appearance" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                    <i class="bi bi-palette me-2"></i>Appearance
+                </a>
+                <a href="#email" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                    <i class="bi bi-envelope me-2"></i>Email Configuration
+                </a>
+                <a href="#payment" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                    <i class="bi bi-credit-card me-2"></i>Payment Settings
+                </a>
+                <a href="#security" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                    <i class="bi bi-shield me-2"></i>Security
+                </a>
+                <a href="#backup" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                    <i class="bi bi-database me-2"></i>Backup & Restore
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Content -->
+    <div class="col-lg-9">
+        <div class="tab-content">
+            <!-- General Settings -->
+            <div class="tab-pane fade show active" id="general">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">General Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-4">
+                                <label class="form-label">Site Title</label>
+                                <input type="text" class="form-control" value="ExamPro - Online Examination System">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Site Description</label>
+                                <textarea class="form-control" rows="3">Transform your learning journey with our innovative online examination platform</textarea>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Site Logo</label>
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="https://via.placeholder.com/100" alt="Logo" class="rounded">
+                                    <div>
+                                        <button type="button" class="btn btn-sm btn-primary">Upload New Logo</button>
+                                        <p class="text-muted small mt-2 mb-0">Recommended size: 200x200px</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label">Contact Email</label>
+                                    <input type="email" class="form-control" value="support@exampro.com">
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label">Contact Phone</label>
+                                    <input type="tel" class="form-control" value="+1 234 567 8900">
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Timezone</label>
+                                <select class="form-select">
+                                    <option>UTC (GMT +0:00)</option>
+                                    <option selected>Eastern Time (GMT -5:00)</option>
+                                    <option>Pacific Time (GMT -8:00)</option>
+                                    <option>Central European Time (GMT +1:00)</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Language</label>
+                                <select class="form-select">
+                                    <option selected>English</option>
+                                    <option>Spanish</option>
+                                    <option>French</option>
+                                    <option>German</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="maintenance" checked>
+                                    <label class="form-check-label" for="maintenance">
+                                        Enable Site Maintenance Mode
+                                    </label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="registration" checked>
+                                    <label class="form-check-label" for="registration">
+                                        Allow User Registration
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Appearance Settings -->
+            <div class="tab-pane fade" id="appearance">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Appearance Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-4">
+                                <label class="form-label">Default Theme</label>
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="theme" id="light" checked>
+                                    <label class="btn btn-outline-primary" for="light">
+                                        <i class="bi bi-sun me-2"></i>Light
+                                    </label>
+                                    
+                                    <input type="radio" class="btn-check" name="theme" id="dark">
+                                    <label class="btn btn-outline-primary" for="dark">
+                                        <i class="bi bi-moon me-2"></i>Dark
+                                    </label>
+                                    
+                                    <input type="radio" class="btn-check" name="theme" id="auto">
+                                    <label class="btn btn-outline-primary" for="auto">
+                                        <i class="bi bi-circle-half me-2"></i>Auto
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Primary Color</label>
+                                <input type="color" class="form-control form-control-color" value="#3b82f6">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Secondary Color</label>
+                                <input type="color" class="form-control form-control-color" value="#8b5cf6">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Font Family</label>
+                                <select class="form-select">
+                                    <option selected>Inter</option>
+                                    <option>Roboto</option>
+                                    <option>Open Sans</option>
+                                    <option>Lato</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Configuration -->
+            <div class="tab-pane fade" id="email">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Email Configuration</h5>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-4">
+                                <label class="form-label">SMTP Host</label>
+                                <input type="text" class="form-control" value="smtp.gmail.com">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label">SMTP Port</label>
+                                    <input type="number" class="form-control" value="587">
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label">Encryption</label>
+                                    <select class="form-select">
+                                        <option>None</option>
+                                        <option selected>TLS</option>
+                                        <option>SSL</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">SMTP Username</label>
+                                <input type="text" class="form-control" value="noreply@exampro.com">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">SMTP Password</label>
+                                <input type="password" class="form-control" value="**********">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">From Email</label>
+                                <input type="email" class="form-control" value="noreply@exampro.com">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">From Name</label>
+                                <input type="text" class="form-control" value="ExamPro System">
+                            </div>
+                            <button type="button" class="btn btn-outline-primary me-2">Test Email</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Settings -->
+            <div class="tab-pane fade" id="payment">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Payment Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-4">
+                                <label class="form-label">Payment Gateway</label>
+                                <select class="form-select">
+                                    <option selected>Stripe</option>
+                                    <option>PayPal</option>
+                                    <option>Razorpay</option>
+                                    <option>Square</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">API Key</label>
+                                <input type="text" class="form-control" value="pk_test_**************************">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">API Secret</label>
+                                <input type="password" class="form-control" value="**********">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Currency</label>
+                                <select class="form-select">
+                                    <option selected>USD ($)</option>
+                                    <option>EUR (€)</option>
+                                    <option>GBP (£)</option>
+                                    <option>INR (₹)</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="testMode" checked>
+                                    <label class="form-check-label" for="testMode">
+                                        Enable Test Mode
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Settings -->
+            <div class="tab-pane fade" id="security">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Security Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-4">
+                                <label class="form-label">Minimum Password Length</label>
+                                <input type="number" class="form-control" value="8" min="6">
+                            </div>
+                            <div class="mb-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="twoFactor" checked>
+                                    <label class="form-check-label" for="twoFactor">
+                                        Enable Two-Factor Authentication
+                                    </label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="recaptcha">
+                                    <label class="form-check-label" for="recaptcha">
+                                        Enable reCAPTCHA on Login
+                                    </label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="emailVerify" checked>
+                                    <label class="form-check-label" for="emailVerify">
+                                        Require Email Verification
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Session Timeout (minutes)</label>
+                                <input type="number" class="form-control" value="30">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Max Login Attempts</label>
+                                <input type="number" class="form-control" value="5">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Backup & Restore -->
+            <div class="tab-pane fade" id="backup">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Backup & Restore</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h6>Create Backup</h6>
+                            <p class="text-muted">Download a complete backup of your database and files</p>
+                            <button class="btn btn-success">
+                                <i class="bi bi-download me-2"></i>Create Backup Now
+                            </button>
+                        </div>
+                        <hr>
+                        <div class="mb-4">
+                            <h6>Automatic Backups</h6>
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="autoBackup" checked>
+                                <label class="form-check-label" for="autoBackup">
+                                    Enable Automatic Backups
+                                </label>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Backup Frequency</label>
+                                    <select class="form-select">
+                                        <option>Daily</option>
+                                        <option selected>Weekly</option>
+                                        <option>Monthly</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Keep Backups For</label>
+                                    <select class="form-select">
+                                        <option>7 days</option>
+                                        <option selected>30 days</option>
+                                        <option>90 days</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div>
+                            <h6>Recent Backups</h6>
+                            <div class="list-group">
+                                <% 
+                                const backups = [
+                                    { date: '2025-01-10 14:30', size: '45.2 MB' },
+                                    { date: '2025-01-03 14:30', size: '44.8 MB' },
+                                    { date: '2024-12-27 14:30', size: '43.5 MB' }
+                                ];
+                                backups.forEach(function(backup) { %>
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <i class="bi bi-file-zip me-2 text-primary"></i>
+                                            <strong>backup_<%= backup.date.replace(/[\s:]/g, '_') %>.zip</strong>
+                                            <br>
+                                            <small class="text-muted">Created: <%= backup.date %> | Size: <%= backup.size %></small>
+                                        </div>
+                                        <div class="btn-group">
+                                            <button class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-download"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.list-group-item-action {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.list-group-item-action.active {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.form-control-color {
+    height: 38px;
+    width: 100%;
+}
+</style>
